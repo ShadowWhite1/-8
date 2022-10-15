@@ -1,27 +1,28 @@
 import requests
+from pprint import pprint
+
 
 class YaUploader:
-    def __init__(self, token):
+    def __init__(self, token: str):
         self.token = token
 
+    def get_headers(self):
+        return {
+            'Content-Type': 'application/json',
+            'Authorization': f'OAuth {self.token}'
+        }
+
     def upload(self, file_path, filename):
-        headers = {'Content-Type': 'application/json', 'Accept': 'application/json', 'Authorization': f'OAuth {self.token}'}
         upload_url = "https://cloud-api.yandex.net/v1/disk/resources/upload"
-        params = {"path": file_path, "overwrite": "true"}
-        response = requests.get(upload_url, headers=headers, params=params)
-        r = response.json()
-        response = requests.put(r['href'], data=open(filename, 'rb'))
-        response.raise_for_status()
-        if response.status_code == 201:
-            print("Success")
+        headers = self.get_headers()
+        params = {'path': file_path, 'overwrite': 'true'}
+        source = requests.get(upload_url, headers = headers, params = params)
+        source_getted = source.json()
+        href = source_getted.get("href", "")
+        result = requests.put(href, data = open(filename, 'rb'))
+        return result
 
 if __name__ == '__main__':
-    # Получить путь к загружаемому файлу и токен от пользователя
-    path_to_file = 'netologi/test.txt'
     token = ""
     uploader = YaUploader(token)
-    result = uploader.upload(path_to_file, 'test.txt')
-
-
-
-
+    pprint(uploader.upload('netology/test1015.txt', "test1015.txt"))
