@@ -23,6 +23,6 @@ class YaUploader:
         return result
 
 if __name__ == '__main__':
-    token = ""
+    token =  ""
     uploader = YaUploader(token)
-    pprint(uploader.upload('netology/test1015.txt', "test1015.txt"))
+    pprint(uploader.upload('test1016.txt', "test1016.txt"))
